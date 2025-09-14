@@ -1,0 +1,12 @@
+# POST http://localhost:3000/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "teacher@example.com",
+#   "password": "senha123"
+# }
+
+GET http://localhost:3000/quizzes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU3ODcwNjAyLCJleHAiOjE3NTc5NTcwMDJ9.quKLg__2vHhsBmg5FWvxeGRwx23FGo6T9ne2BXqSoUk
+Content-Type: application/json
+
