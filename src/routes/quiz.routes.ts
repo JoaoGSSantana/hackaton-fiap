@@ -2,7 +2,7 @@ import { Router } from "express";
 import { QuizController } from "../interfaces/http/controllers/QuizController";
 import { authMiddleware } from "../shared/middlewares/auth";
 
-export function makeRoutes(deps: { createQuizUseCase: any }) {
+export function makeQuizRoutes(deps: { createQuizUseCase: any }) {
   const router = Router();
   const controller = new QuizController(deps.createQuizUseCase);
 

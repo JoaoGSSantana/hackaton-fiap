@@ -1,27 +1,20 @@
 import "reflect-metadata";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import * as dotenv from "dotenv";
+
+import { makeUserDeps } from "./factories/makeUserDeps";
+
 import { AppDataSource } from "../infra/typeorm/data-source";
+import { TypeORMQuizRepository } from "../infra/repositories/TypeORMQuizRepository";
+import { TypeORMUserRepository } from "../infra/repositories/TypeORMUserRepository";
 
 import { makeAuthRoutes } from "../routes/auth.routes";
-import { makeRoutes as makeQuizRoutes } from "../routes/routes";
+import { makeQuizRoutes } from "../routes/quiz.routes";
+import { makeUserRoutes } from "../routes/user.routes";
+
+import { errorHandler } from "../shared/middlewares/error-handler";
 
 import { CreateQuizUseCase } from "../use-cases/createQuiz/CreateQuizUseCase";
-import { TypeORMQuizRepository } from "../infra/repositories/TypeORMQuizRepository";
-
-// Inicialização do Use Case
-const quizRepository = new TypeORMQuizRepository();
-const createQuizUseCase = new CreateQuizUseCase(quizRepository);
-
-function errorHandler(
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  console.error(err);
-  return res.status(500).json({ message: "Erro interno do servidor" });
-}
 
 dotenv.config();
 
@@ -32,8 +25,16 @@ app.use(express.json());
 
 AppDataSource.initialize()
   .then(() => {
+    // inicialização do repositório
+    const quizRepository = new TypeORMQuizRepository();
+    const userRepository = new TypeORMUserRepository();
+
+    // Inicialização do Use Case
+    const createQuizUseCase = new CreateQuizUseCase(quizRepository);
+
     app.use("/auth", makeAuthRoutes());
     app.use("/", makeQuizRoutes({ createQuizUseCase }));
+    app.use("/user", makeUserRoutes(makeUserDeps(userRepository)));
 
     app.use(errorHandler);
 

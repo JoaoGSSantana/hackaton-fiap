@@ -14,7 +14,10 @@ export class LoginUserUseCase {
   constructor(private userRepo: Repository<User>) {}
 
   async execute({ email, password }: LoginDTO) {
-    const user = await this.userRepo.findOne({ where: { email } });
+    const user = await this.userRepo.findOne({
+      where: { email },
+      select: ["id", "name", "role", "password"],
+    });
     if (!user) throw new Error("Usuário não encontrado");
 
     const passwordMatch = await bcrypt.compare(password, user.password);

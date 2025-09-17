@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   db:
+    container_name: quiz_edu_db
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
@@ -12,6 +13,7 @@ services:
       - db_data:/var/lib/postgresql/data
 
   backend:
+    container_name: quiz_edu_backend
     build: .
     command: npm run dev
     volumes:
